@@ -1,7 +1,6 @@
 
-from unittest.mock import patch
+from unittest.mock import MagicMock
 from pytest import fixture
-import pytest
 
 from src.domain.model.account import Account, User
 from src.domain.model.balance import BalanceType
@@ -20,7 +19,7 @@ class TestAuthorizerService:
         return Account(456, some_user)   
     
 
-    def test_should_not_authorized_transaction(self, account, service):
+    def test_should_not_authorized_transaction_not_enough_balance(self, account, service):
         assert account.get_balance(BalanceType.CASH).amount == 0.00
 
         transaction_request = TransactionRequest(
@@ -33,6 +32,19 @@ class TestAuthorizerService:
         result = service.authorize(transaction_request, account)
 
         assert result == AuthorizationResult.REJECTED_BALANCE
+
+    def test_should_not_authorized_transaction_generic_error(self, account, service):
+        service.accounts_service.debit = MagicMock(side_effect=Exception("generic error"))
+        transaction_request = TransactionRequest(
+            account.id,
+            23.90,
+            '1234',
+            'Padaria Silva'
+        )
+
+        result = service.authorize(transaction_request, account)
+
+        assert result == AuthorizationResult.REJECTED_ERROR
 
     def test_should_authorized_transaction(self, account, service):
         assert account.get_balance(BalanceType.CASH).amount == 0.00
