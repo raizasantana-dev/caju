@@ -1,5 +1,7 @@
 
+from unittest.mock import patch
 from pytest import fixture
+import pytest
 
 from src.domain.model.account import Account, User
 from src.domain.model.balance import BalanceType
@@ -15,7 +17,7 @@ class TestAuthorizerService:
     @fixture
     def account(self):
         some_user = User(123, 'someone@gmail.com')
-        return Account(456, some_user)
+        return Account(456, some_user)   
     
 
     def test_should_not_authorized_transaction(self, account, service):
@@ -27,7 +29,95 @@ class TestAuthorizerService:
             '1234',
             'Padaria Silva'
         )
-        
+
         result = service.authorize(transaction_request, account)
 
         assert result == AuthorizationResult.REJECTED_BALANCE
+
+    def test_should_authorized_transaction(self, account, service):
+        assert account.get_balance(BalanceType.CASH).amount == 0.00
+
+        account.credit(BalanceType.CASH, 199.0)
+        
+        transaction_request = TransactionRequest(
+            account.id,
+            23.90,
+            '1234',
+            'Padaria Silva'
+        )
+        
+        result = service.authorize(transaction_request, account)
+
+        assert result == AuthorizationResult.AUTHORIZED
+
+
+    def test_should_authorized_food_transaction(self, account, service):
+        assert account.get_balance(BalanceType.CASH).amount == 0.00
+
+        account.credit(BalanceType.CASH, 199.0)
+        account.credit(BalanceType.FOOD, 300.0)
+        
+        current_balance = account.get_balance(BalanceType.FOOD)
+        assert current_balance.amount == 300.0
+
+        transaction_request = TransactionRequest(
+            account.id,
+            25.90,
+            '5411',
+            'Mercado Li'
+        )
+        
+        result = service.authorize(transaction_request, account)
+
+        assert result == AuthorizationResult.AUTHORIZED
+        new_balance_food = account.get_balance(BalanceType.FOOD)
+        assert new_balance_food.amount == 274.10
+
+        new_balance_cash = account.get_balance(BalanceType.CASH)
+        assert new_balance_cash.amount == 199.0
+
+    def test_should_authorized_cash_transaction(self, account, service):
+        account.credit(BalanceType.CASH, 199.0)
+        account.credit(BalanceType.FOOD, 300.0)
+        
+        current_balance = account.get_balance(BalanceType.CASH)
+        assert current_balance.amount == 199.0
+
+        transaction_request = TransactionRequest(
+            account.id,
+            100.0,
+            '9999',
+            'Uber'
+        )
+        
+        result = service.authorize(transaction_request, account)
+
+        assert result == AuthorizationResult.AUTHORIZED
+        new_balance_cash = account.get_balance(BalanceType.CASH)
+        assert new_balance_cash.amount == 99.0
+
+        new_balance_food = account.get_balance(BalanceType.FOOD)
+        assert new_balance_food.amount == 300.0
+
+    def test_should_authorized_meal_transaction(self, account, service):
+        account.credit(BalanceType.CASH, 199.0)
+        account.credit(BalanceType.FOOD, 300.0)
+        account.credit(BalanceType.MEAL, 25.0)
+        
+        current_balance = account.get_balance(BalanceType.MEAL)
+        assert current_balance.amount == 25.0
+
+        transaction_request = TransactionRequest(
+            account.id,
+            10.0,
+            '5812',
+            'Uau Pizza'
+        )
+        
+        result = service.authorize(transaction_request, account)
+
+        assert result == AuthorizationResult.AUTHORIZED
+        new_balance_cash = account.get_balance(BalanceType.MEAL)
+        assert new_balance_cash.amount == 15.0
+
+    

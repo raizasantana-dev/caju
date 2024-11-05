@@ -12,3 +12,6 @@ class AccuntsService:
     
     def debit(self, account, balance_type, total_amount):
         account.debit(balance_type, total_amount)
+
+    def credit(self, account, balance_type, total_amount):
+        account.credit(balance_type, total_amount)
