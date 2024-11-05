@@ -6,6 +6,9 @@ from src.domain.model.balance import BalanceType
 
 
 class TestAccountModel:
+    # def setUp(self):
+
+
     @pytest.fixture
     def account(self):
         some_user = User(123, 'someone@gmail.com')
@@ -41,3 +44,8 @@ class TestAccountModel:
         with pytest.raises(NotEnoughBalanceException):
             account.debit(BalanceType.MEAL, 50.00)
 
+
+    def test_should_get_correct_balance(self, account):
+        result = account.get_balance(BalanceType.CASH)
+        assert result.type == BalanceType.CASH
+        assert result.amount == 0.00

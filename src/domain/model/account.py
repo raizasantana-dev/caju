@@ -13,9 +13,9 @@ class Account:
         self.id = id
         self.user = User
         self.balances: dict[BalanceType, Balance] = {
-            BalanceType.FOOD: Balance(0.00),
-            BalanceType.MEAL: Balance(0.00),
-            BalanceType.CASH: Balance(0.00)
+            BalanceType.FOOD: Balance(BalanceType.FOOD),
+            BalanceType.MEAL: Balance(BalanceType.MEAL),
+            BalanceType.CASH: Balance(BalanceType.CASH)
         }
         self.card_list = []
 

@@ -13,8 +13,9 @@ class BalanceType(Enum):
     #     return mcc in ["5811", "5812"]
     
 class Balance:
-    def __init__(self, initial_amount = 0.00):
+    def __init__(self, type: BalanceType, initial_amount = 0.00):
         self.amount = initial_amount
+        self.type = type
         # self.locked = False
         self.last_update = datetime.now()
 
