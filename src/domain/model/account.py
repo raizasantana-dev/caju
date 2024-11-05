@@ -23,10 +23,15 @@ class Account:
     def get_balance(self, type) -> Balance:
         return self.balances[type]
     
-    def debit(self, type, total_amount): # TODO: this mehotd should be global
+    def debit(self, type, total_amount): 
         current_amount = self.balances[type].amount
         if (current_amount < total_amount):
-            raise NotEnoughBalanceException()
+            
+            cash_balance = self.balances[BalanceType.CASH].amount
+            if (cash_balance < total_amount):
+                raise NotEnoughBalanceException()
+            else:
+                self.balances[BalanceType.CASH].amount -= total_amount
         else:
             self.balances[type].amount -= total_amount
 

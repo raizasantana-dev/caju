@@ -6,15 +6,12 @@ from src.domain.model.balance import BalanceType
 
 
 class TestAccountModel:
-    # def setUp(self):
-
-
     @pytest.fixture
     def account(self):
         some_user = User(123, 'someone@gmail.com')
         return Account(456, some_user)
 
-    def test_should_create_account_eith_right_balances(self):
+    def test_should_create_account_with_right_balances(self):
         new_user = User(22, 'email@mail.com')
         new_account = Account(229, new_user)
 

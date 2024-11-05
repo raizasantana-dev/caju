@@ -69,8 +69,7 @@ class TestAuthorizerService:
         account.credit(BalanceType.CASH, 199.0)
         account.credit(BalanceType.FOOD, 300.0)
         
-        current_balance = account.get_balance(BalanceType.FOOD)
-        assert current_balance.amount == 300.0
+        assert account.get_balance(BalanceType.FOOD).amount == 300.0
 
         transaction_request = TransactionRequest(
             account.id,
@@ -82,18 +81,14 @@ class TestAuthorizerService:
         result = service.authorize(transaction_request, account)
 
         assert result == AuthorizationResult.AUTHORIZED
-        new_balance_food = account.get_balance(BalanceType.FOOD)
-        assert new_balance_food.amount == 274.10
-
-        new_balance_cash = account.get_balance(BalanceType.CASH)
-        assert new_balance_cash.amount == 199.0
+        assert account.get_balance(BalanceType.FOOD).amount == 274.10
+        assert account.get_balance(BalanceType.CASH).amount == 199.0
 
     def test_should_authorized_cash_transaction(self, account, service):
         account.credit(BalanceType.CASH, 199.0)
         account.credit(BalanceType.FOOD, 300.0)
         
-        current_balance = account.get_balance(BalanceType.CASH)
-        assert current_balance.amount == 199.0
+        assert account.get_balance(BalanceType.CASH).amount == 199.0
 
         transaction_request = TransactionRequest(
             account.id,
@@ -105,19 +100,15 @@ class TestAuthorizerService:
         result = service.authorize(transaction_request, account)
 
         assert result == AuthorizationResult.AUTHORIZED
-        new_balance_cash = account.get_balance(BalanceType.CASH)
-        assert new_balance_cash.amount == 99.0
-
-        new_balance_food = account.get_balance(BalanceType.FOOD)
-        assert new_balance_food.amount == 300.0
+        assert account.get_balance(BalanceType.CASH).amount == 99.0
+        assert account.get_balance(BalanceType.FOOD).amount == 300.0
 
     def test_should_authorized_meal_transaction(self, account, service):
         account.credit(BalanceType.CASH, 199.0)
         account.credit(BalanceType.FOOD, 300.0)
         account.credit(BalanceType.MEAL, 25.0)
         
-        current_balance = account.get_balance(BalanceType.MEAL)
-        assert current_balance.amount == 25.0
+        assert account.get_balance(BalanceType.MEAL).amount == 25.0
 
         transaction_request = TransactionRequest(
             account.id,
@@ -129,7 +120,24 @@ class TestAuthorizerService:
         result = service.authorize(transaction_request, account)
 
         assert result == AuthorizationResult.AUTHORIZED
-        new_balance_cash = account.get_balance(BalanceType.MEAL)
-        assert new_balance_cash.amount == 15.0
+        assert account.get_balance(BalanceType.MEAL).amount == 15.0
 
-    
+    def test_should_authorized_food_transaction_but_debits_on_cash_balance(self, account, service):
+        account.credit(BalanceType.CASH, 199.0)
+        account.credit(BalanceType.FOOD, 2.0)
+
+        assert account.get_balance(BalanceType.CASH).amount == 199.0
+        assert account.get_balance(BalanceType.FOOD).amount == 2.00
+
+        transaction_request = TransactionRequest(
+            account.id,
+            10.0,
+            '5411',
+            'Uau Pizza'
+        )
+
+        result = service.authorize(transaction_request, account)
+
+        assert result == AuthorizationResult.AUTHORIZED       
+        assert account.get_balance(BalanceType.CASH).amount == 189.0
+        assert account.get_balance(BalanceType.FOOD).amount == 2.00
