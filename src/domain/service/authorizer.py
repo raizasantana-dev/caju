@@ -1,10 +1,10 @@
 from enum import Enum
 
-from domain.model.account import Account
-from domain.model.account_exceptions import NotEnoughBalanceException
-from domain.model.balance import BalanceType
-from domain.model.transaction import TransactionRequest
-from domain.service.accounts import AccuntsService
+from src.domain.model.account import Account
+from src.domain.model.account_exceptions import NotEnoughBalanceException
+from src.domain.model.balance import BalanceType
+from src.domain.model.transaction import TransactionRequest
+from src.domain.service.accounts import AccuntsService
 
 class AuthorizationResult(Enum):
     AUTHORIZED = 1
@@ -20,7 +20,7 @@ class TransactionsAuthorizer:
             '5811': BalanceType.MEAL,
             '5812': BalanceType.MEAL,
         }
-
+        self.accounts_service = AccuntsService()
 
     def authorize(self, request: TransactionRequest, account: Account) -> AuthorizationResult:
         

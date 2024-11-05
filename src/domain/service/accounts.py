@@ -1,6 +1,6 @@
-from domain.model.account import Account
-from domain.model.account_exceptions import NotEnoughBalanceException
-from domain.model.balance import Balance, BalanceType
+from src.domain.model.account import Account
+from src.domain.model.account_exceptions import NotEnoughBalanceException
+from src.domain.model.balance import Balance, BalanceType
 
 
 class AccuntsService:
@@ -11,9 +11,4 @@ class AccuntsService:
     #     balance_list = self.get_account(account_id).balance_list
     
     def debit(self, account, balance_type, total_amount):
-        current_balance = account.get_balance(balance_type) # maybe add lock here?
-
-        if (current_balance < total_amount):
-            raise NotEnoughBalanceException()
-        else:
-            account.debit(balance_type, total_amount)
+        account.debit(balance_type, total_amount)
