@@ -1,4 +1,5 @@
 
+from src.domain.model.account_exceptions import NotEnoughBalanceException
 from src.domain.model.balance import Balance, BalanceType
 
 
@@ -23,7 +24,11 @@ class Account:
         return self.balances[type]
     
     def debit(self, type, total_amount):
-        self.balances[type].amount -= total_amount
+        current_amount = self.balances[type].amount
+        if (current_amount < total_amount):
+            raise NotEnoughBalanceException()
+        else:
+            self.balances[type].amount -= total_amount
 
     def credit(self, type, total_amount):
         self.balances[type].amount += total_amount
