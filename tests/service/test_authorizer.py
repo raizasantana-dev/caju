@@ -141,3 +141,52 @@ class TestAuthorizerService:
         assert result == AuthorizationResult.AUTHORIZED       
         assert account.get_balance(BalanceType.CASH).amount == 189.0
         assert account.get_balance(BalanceType.FOOD).amount == 2.00
+
+    def test_should_extract_food_type(self, service):
+        transaction_request = TransactionRequest(
+            1234,
+            23.90,
+            '5811',
+            'Assai Atacad'
+        )
+
+        result = service.extract_type(transaction_request)
+
+        assert result == BalanceType.FOOD
+
+
+    def test_should_extract_meal_type(self, service):
+        transaction_request = TransactionRequest(
+            1234,
+            23.90,
+            '5411',
+            'Subway'
+        )
+
+        result = service.extract_type(transaction_request)
+
+        assert result == BalanceType.MEAL
+
+    def test_should_extract_cash_type(self, service):
+        transaction_request = TransactionRequest(
+            1234,
+            23.90,
+            '9999',
+            'V*G Padaria'
+        )
+
+        result = service.extract_type(transaction_request)
+
+        assert result == BalanceType.CASH
+
+    def test_should_extract_food_type(self, service):
+        transaction_request = TransactionRequest(
+            1234,
+            23.90,
+            '5411',
+            'V*G Padaria'
+        )
+
+        result = service.extract_type(transaction_request)
+
+        assert result == BalanceType.FOOD
