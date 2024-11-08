@@ -1,24 +1,23 @@
 
+import uuid
+from pydantic import BaseModel, EmailStr, Field
 from src.domain.model.account_exceptions import NotEnoughBalanceException
 from src.domain.model.balance import Balance, BalanceType
 
 
-class User:
-    def __init__(self, id, email) -> None:
-        self.id = id
-        self.email = email
+class User(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    email: EmailStr = Field(unique=True, index=True)
+    
 
-class Account:
-    def __init__(self, id, user: User) -> None:
-        self.id = id
-        self.user = User
-        self.balances: dict[BalanceType, Balance] = {
-            BalanceType.FOOD: Balance(BalanceType.FOOD),
-            BalanceType.MEAL: Balance(BalanceType.MEAL),
-            BalanceType.CASH: Balance(BalanceType.CASH)
-        }
-        self.card_list = []
-
+class Account(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    user: User
+    balances: dict[BalanceType, Balance] = {
+            BalanceType.FOOD: Balance(type=BalanceType.FOOD),
+            BalanceType.MEAL: Balance(type=BalanceType.MEAL),
+            BalanceType.CASH: Balance(type=BalanceType.CASH)
+    } 
 
     def get_balance(self, type) -> Balance:
         return self.balances[type]

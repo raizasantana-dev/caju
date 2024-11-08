@@ -1,14 +1,15 @@
 from src.domain.model.account import Account
 from src.domain.model.account_exceptions import NotEnoughBalanceException
 from src.domain.model.balance import Balance, BalanceType
+from src.repository.mongodb import account as accounts_repository
 
 
 class AccuntsService:
     def get_account(self, id) -> Account:
         return Account(1, 'rose@mail.com')
     
-    # def get_balance_locked(self, account_id, type: BalanceType) -> Balance:
-    #     balance_list = self.get_account(account_id).balance_list
+    def create(self, account) -> Account:
+        return accounts_repository.create_account(account)
     
     def debit(self, account, balance_type, total_amount):
         account.debit(balance_type, total_amount)

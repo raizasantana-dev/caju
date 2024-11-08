@@ -8,12 +8,12 @@ from src.domain.model.balance import BalanceType
 class TestAccountModel:
     @pytest.fixture
     def account(self):
-        some_user = User(123, 'someone@gmail.com')
-        return Account(456, some_user)
+        some_user = User(email='someone@gmail.com')
+        return Account(user=some_user)
 
     def test_should_create_account_with_right_balances(self):
-        new_user = User(22, 'email@mail.com')
-        new_account = Account(229, new_user)
+        new_user = User(email='email@mail.com')
+        new_account = Account(user=new_user)
 
         assert len(new_account.balances) == 3
         

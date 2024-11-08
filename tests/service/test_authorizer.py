@@ -15,8 +15,8 @@ class TestAuthorizerService:
     
     @fixture
     def account(self):
-        some_user = User(123, 'someone@gmail.com')
-        return Account(456, some_user)   
+        some_user = User(email='someone@gmail.com')
+        return Account(user=some_user)   
     
 
     def test_should_not_authorized_transaction_not_enough_balance(self, account, service):

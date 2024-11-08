@@ -1,30 +1,17 @@
 from enum import Enum
 from datetime import datetime
+import uuid
+
+from pydantic import BaseModel, Field
 
 class BalanceType(Enum):
     FOOD = 1
     MEAL = 2
     CASH = 3
-
-    # def _is_food(mcc) -> bool:
-    #     return mcc in ["5411", "5412"]
     
-    # def _is_meal(mcc) -> bool:
-    #     return mcc in ["5811", "5812"]
+class Balance(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    amount: float = 0.00
+    type: BalanceType
+    last_update: datetime = datetime.now()
     
-class Balance:
-    def __init__(self, type: BalanceType, initial_amount = 0.00):
-        self.amount = initial_amount
-        self.type = type
-        # self.locked = False
-        self.last_update = datetime.now()
-
-
-    # def lock(self):
-    #     self.locked = True
-    #     self.last_update = datetime.now()
-
-
-    # def un_lock(self):
-    #     self.locked = False
-    #     self.last_update = datetime.now()
