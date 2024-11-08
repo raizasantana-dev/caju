@@ -10,4 +10,4 @@ def health(request: Request):
     return { "ok": "ok"}
 
 router.include_router(health_check_router)
-router.include_router(accounts)
+router.include_router(accounts.router)

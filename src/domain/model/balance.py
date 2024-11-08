@@ -5,13 +5,13 @@ import uuid
 from pydantic import BaseModel, Field
 
 class BalanceType(Enum):
-    FOOD = 1
-    MEAL = 2
-    CASH = 3
+    FOOD = "FOOD"
+    MEAL = "MEAL"
+    CASH = "CASH"
     
 class Balance(BaseModel):
-    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     amount: float = 0.00
-    type: BalanceType
+    type: BalanceType = Field()
     last_update: datetime = datetime.now()
     
