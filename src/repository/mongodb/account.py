@@ -1,7 +1,5 @@
-import datetime
 from fastapi import Body, Request, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from bson import ObjectId
 
 from src.domain.model.balance import Balance
 from src.repository.mongodb.helper import get_collection

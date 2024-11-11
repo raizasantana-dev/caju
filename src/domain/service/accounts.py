@@ -1,7 +1,4 @@
-import uuid
-
 from src.domain.model.account import Account, User
-from src.domain.model.account_exceptions import NotEnoughBalanceException
 from src.domain.model.balance import Balance, BalanceType
 from src.repository.mongodb import account as accounts_repository
 

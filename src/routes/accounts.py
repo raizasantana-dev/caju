@@ -2,7 +2,6 @@
 from fastapi import APIRouter, Body, status
 
 from src.domain.model.account_requests import CreateAccountRequest, UpdateAccountBalanceRequest, UpdateBalanceOperation
-from src.domain.model.balance import BalanceType
 from src.domain.service.accounts import AccountsService
 from src.domain.model.account import Account
 

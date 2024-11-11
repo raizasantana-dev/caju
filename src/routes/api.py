@@ -6,7 +6,7 @@ router = APIRouter()
 
 health_check_router = APIRouter(prefix="/health",tags=["health-check"])
 @health_check_router.get("/")
-def health(request: Request):
+def health():
     return { "ok": "ok"}
 
 router.include_router(health_check_router)

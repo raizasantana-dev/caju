@@ -1,5 +1,5 @@
 
-from typing import List, Optional
+from typing import List
 import uuid
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from src.domain.model.account_exceptions import NotEnoughBalanceException
