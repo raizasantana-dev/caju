@@ -73,7 +73,7 @@ operation aceita 1 (CRÉDITO) e 2 (DÉBITO)
  ## Como rodar os testes
 
     - Dependências:
-        - Python
+        - Python 3.13
         - Pytest
 
 Recomendo a criação de um ambiente virtual para o projeto.
