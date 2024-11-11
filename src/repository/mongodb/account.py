@@ -8,8 +8,14 @@ from src.domain.model.account import Account
 def get_collection_accounts():
   return get_collection("accounts")
 
-def create_account(account: Account):
-    account = jsonable_encoder(account)
-    new_account = get_collection_accounts().insert_one(account)
-    created_account = get_collection_accounts().find_one({"_id": new_account.inserted_id})
-    return created_account
+def insert_account(account_instance):
+    account_data = jsonable_encoder(account_instance)  # Converte para dicionário com `_id`
+    result = get_collection_accounts().insert_one(account_data)
+    print(f"Account inserted with _id: {result.inserted_id}")
+    return str(result.inserted_id)  # Retorna o ID como string
+
+
+def find_account( id: str):
+    if (account := get_collection_accounts().find_one({"_id": ObjectId(id)})):
+        return account
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Account with id {id} not found!")

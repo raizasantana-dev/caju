@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import List, Optional
 import uuid
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from src.domain.model.account_exceptions import NotEnoughBalanceException
@@ -7,15 +7,12 @@ from src.domain.model.balance import Balance, BalanceType
 
 
 class User(BaseModel):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     email: EmailStr = Field(unique=True, index=True)
 
-    
-
 class Account(BaseModel):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
     user: User
-    balances: dict[BalanceType, Balance]
+    balances: List[Balance]
 
     model_config = ConfigDict(
             populate_by_name = True,
