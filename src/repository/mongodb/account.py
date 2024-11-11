@@ -9,13 +9,13 @@ def get_collection_accounts():
   return get_collection("accounts")
 
 def insert_account(account_instance):
-    account_data = jsonable_encoder(account_instance)  # Converte para dicionário com `_id`
+    account_data = jsonable_encoder(account_instance) 
     result = get_collection_accounts().insert_one(account_data)
     print(f"Account inserted with _id: {result.inserted_id}")
-    return str(result.inserted_id)  # Retorna o ID como string
+    return str(result.inserted_id)
 
 
 def find_account( id: str):
-    if (account := get_collection_accounts().find_one({"_id": ObjectId(id)})):
+    if (account := get_collection_accounts().find_one({"_id": id})):
         return account
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Account with id {id} not found!")
