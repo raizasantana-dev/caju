@@ -1,9 +1,7 @@
 
+from fastapi import APIRouter, Body, status
 
-from enum import Enum
-from fastapi import APIRouter, Body, Request, status
-from pydantic import BaseModel, EmailStr, Field
-
+from src.domain.model.account_requests import CreateAccountRequest, UpdateAccountBalanceRequest, UpdateBalanceOperation
 from src.domain.model.balance import BalanceType
 from src.domain.service.accounts import AccountsService
 from src.domain.model.account import Account
@@ -11,18 +9,6 @@ from src.domain.model.account import Account
 
 router = APIRouter(prefix="/account", tags=["Account"])
 service = AccountsService()
-
-class CreateAccountRequest(BaseModel):
-    email: EmailStr = Field(unique=True, index=True)
-
-class UpdateBalanceOperation(Enum):
-    CREDIT = 1
-    DEBIT = 2
-    
-class UpdateAccountBalanceRequest(BaseModel):
-    operation: UpdateBalanceOperation
-    balance_type: BalanceType
-    amount: float
     
 @router.post("/", response_description="Create a new account", status_code=status.HTTP_201_CREATED)
 def create_account(request: CreateAccountRequest = Body(...)):  
