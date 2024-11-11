@@ -7,7 +7,7 @@ from src.domain.model.balance import Balance, BalanceType
 
 
 class User(BaseModel):
-    email: EmailStr = Field(unique=True, index=True)
+    email: EmailStr = Field()
 
 class Account(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
@@ -20,22 +20,26 @@ class Account(BaseModel):
         
 
     def get_balance(self, type) -> Balance:
-        return self.balances[type]
+       for balance in self.balances:
+           if balance.type == type:
+               return balance
     
     def debit(self, type, total_amount): 
-        current_amount = self.balances[type].amount
+
+        current_amount = self.get_balance(type).amount
         if (current_amount < total_amount):
             
-            cash_balance = self.balances[BalanceType.CASH].amount
+            cash_balance = self.get_balance(BalanceType.CASH).amount
             if (cash_balance < total_amount):
                 raise NotEnoughBalanceException()
             else:
-                self.balances[BalanceType.CASH].amount -= total_amount
+                self.get_balance(BalanceType.CASH).amount -= total_amount
         else:
-            self.balances[type].amount -= total_amount
+            self.get_balance(type).amount -= total_amount
 
     def credit(self, type, total_amount):
-        self.balances[type].amount += total_amount
+        right_balance = self.get_balance(type)
+        right_balance.amount += total_amount
 
 
 

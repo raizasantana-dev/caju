@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from pytest import fixture
 
 from src.domain.model.account import Account, User
-from src.domain.model.balance import BalanceType
+from src.domain.model.balance import Balance, BalanceType
 from src.domain.model.transaction import TransactionRequest
 from src.domain.service.authorizer import AuthorizationResult, TransactionsAuthorizer
 
@@ -16,7 +16,12 @@ class TestAuthorizerService:
     @fixture
     def account(self):
         some_user = User(email='someone@gmail.com')
-        return Account(user=some_user)   
+        balances=[
+               Balance(type=BalanceType.FOOD),
+               Balance(type=BalanceType.MEAL),
+               Balance(type=BalanceType.CASH)
+            ]
+        return Account(user=some_user, balances=balances)   
     
 
     def test_should_not_authorized_transaction_not_enough_balance(self, account, service):
