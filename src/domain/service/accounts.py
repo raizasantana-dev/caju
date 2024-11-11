@@ -27,9 +27,11 @@ class AccountsService:
         new_balance = account.debit(balance_type, amount)
 
         accounts_repository.update_balance(account, new_balance)
+        return account
 
     def credit(self, account_id, balance_type, amount):
         account = accounts_repository.find_account(account_id)
         new_balance = account.credit(balance_type, amount)
 
         accounts_repository.update_balance(account, new_balance)
+        return account
