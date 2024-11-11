@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, status
 from fastapi import APIRouter
-from src.routes import accounts
+from src.routes import accounts, transactions
 
 router = APIRouter()
 
@@ -11,3 +11,4 @@ def health(request: Request):
 
 router.include_router(health_check_router)
 router.include_router(accounts.router)
+router.include_router(transactions.router)

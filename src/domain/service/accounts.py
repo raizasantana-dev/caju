@@ -6,7 +6,7 @@ from src.domain.model.balance import Balance, BalanceType
 from src.repository.mongodb import account as accounts_repository
 
 
-class AccuntsService:
+class AccountsService:
     def get_account(self, id) -> Account:
         return accounts_repository.find_account(id)
     

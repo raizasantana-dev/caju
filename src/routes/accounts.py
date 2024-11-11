@@ -5,12 +5,12 @@ from fastapi import APIRouter, Body, Request, status
 from pydantic import BaseModel, EmailStr, Field
 
 from src.domain.model.balance import BalanceType
-from src.domain.service.accounts import AccuntsService
+from src.domain.service.accounts import AccountsService
 from src.domain.model.account import Account
 
 
 router = APIRouter(prefix="/account", tags=["Account"])
-service = AccuntsService()
+service = AccountsService()
 
 class CreateAccountRequest(BaseModel):
     email: EmailStr = Field(unique=True, index=True)
