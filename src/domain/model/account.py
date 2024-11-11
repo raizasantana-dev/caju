@@ -25,7 +25,6 @@ class Account(BaseModel):
                return balance
     
     def debit(self, type, total_amount): 
-
         current_amount = self.get_balance(type).amount
         if (current_amount < total_amount):
             
@@ -34,12 +33,15 @@ class Account(BaseModel):
                 raise NotEnoughBalanceException()
             else:
                 self.get_balance(BalanceType.CASH).amount -= total_amount
+                return self.get_balance(BalanceType.CASH)
         else:
             self.get_balance(type).amount -= total_amount
+            return self.get_balance(type)
 
     def credit(self, type, total_amount):
         right_balance = self.get_balance(type)
         right_balance.amount += total_amount
+        return self.get_balance(type)
 
 
 

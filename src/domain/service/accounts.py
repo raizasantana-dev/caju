@@ -1,4 +1,5 @@
 import uuid
+
 from src.domain.model.account import Account, User
 from src.domain.model.account_exceptions import NotEnoughBalanceException
 from src.domain.model.balance import Balance, BalanceType
@@ -21,8 +22,14 @@ class AccuntsService:
 
         return accounts_repository.insert_account(account)
     
-    def debit(self, account, balance_type, total_amount):
-        account.debit(balance_type, total_amount)
+    def debit(self, account_id, balance_type, amount):
+        account = accounts_repository.find_account(account_id)
+        new_balance = account.debit(balance_type, amount)
 
-    def credit(self, account, balance_type, total_amount):
-        account.credit(balance_type, total_amount)
+        accounts_repository.update_balance(account, new_balance)
+
+    def credit(self, account_id, balance_type, amount):
+        account = accounts_repository.find_account(account_id)
+        new_balance = account.credit(balance_type, amount)
+
+        accounts_repository.update_balance(account, new_balance)

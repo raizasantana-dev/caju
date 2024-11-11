@@ -10,6 +10,7 @@ class BalanceType(Enum):
     CASH = "CASH"
     
 class Balance(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
     amount: float = 0.00
     type: BalanceType = Field()
     last_update: datetime = datetime.now()
